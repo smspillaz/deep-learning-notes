@@ -233,3 +233,41 @@ layers can just "unscramble" the features into something sensible.
 One can also learn the features using a method that doesn't require
 a full backprop at every step - train the first layer in isolation,
 then train the second layer and so on.
+
+
+## Inception Architecture
+How do you know what filter size to use at each later? Do you use
+3x3? 5x5? This is tricky to understand.
+
+Another approach is to use all of them and let the model decide. Do
+the convolutions in parallel and concatenate the resulting
+feature maps.
+
+We have inception modules as follows:
+
+We take a 1x1 -> 3x3 convolution, a 1x1 -> 5x5 convolution
+and a 3x3 max pool -> 1x1 convolution, plus a 1x1 convolution
+
+So in all, four options: 1x1 (passthrough), 3x3, 5x5, maxpool
+
+The network just picks weights from the ones that work best.
+
+What's up with all the 1x1 convolutions? They reduce the
+dimensionality of the feature maps coming in from the previous
+layers.
+
+How does this work?
+
+First, understand the problem that this is trying to solve. Say that
+we do not use the 1x1 convolution. What happens in this case?
+
+Each inception layer at level 3 has output size 28x28x256. We have 192
+28x28 feature maps.
+
+The 1x1 convolution takes us from 192 28x28 feature maps to 16 28x28 feature
+maps. This shrinks computation by a factor of 10.
+
+## More on 1x1 convolutions
+We can also combine 1x1 convolutions with a stride in prder to do dilated
+convolutions, which is basically a more computationally efficient way
+of doing pooling if you 
