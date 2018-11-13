@@ -271,3 +271,31 @@ maps. This shrinks computation by a factor of 10.
 We can also combine 1x1 convolutions with a stride in prder to do dilated
 convolutions, which is basically a more computationally efficient way
 of doing pooling if you 
+
+## ResNets
+ResNets take inception even further and go for depth over all else. This
+is based on the concept that with sufficient regularization, we can avoid
+overfitting and keep adding more layers to remember more and more
+relevant information at each stage.
+
+However, if we just naively increase the depth and up the regularization,
+we run into another problem: vanishing gradients or exploding gradients. Batch
+norm can help with the former case to some extent, but not with the former.
+
+ResNets "are deep, but remain shallow". We add extra layers to the network. However
+a lot of these layers are identity mappings.
+
+A residual is an error in a result. What is important to understand is that if
+your residual is 0 then you shouldn't do anything to the prediction. Eg, you should
+just be able to pick the identity transformation instead of adjusting any weights.
+
+This is realized by a feedforward network with "shortcut" connections or "skip"
+connections.
+
+Those shortcut connections just perform an identity mapping and their outputs are
+dded to the outputs of the stacked layers.
+
+So, what happens is that the Residual Network can "dynamically add or remove layers"
+depending on whether or not it needs to learn more depth, because if the prior
+layers were already predictive enough then it can just skip the middle layers
+and use the information from the skip connectiosn instead.
